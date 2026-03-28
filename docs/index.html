@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>agentrace — structured observability for AI agents</title>
+<meta name="description" content="See what your AI agent does, why it decides, and where it fails. MCP server + CLI viewer. Zero dependencies.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,system-ui,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6}
+.container{max-width:720px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:2.5rem;font-weight:700;margin-bottom:.5rem;color:#fff}
+h1 span{color:#00c896}
+.tagline{font-size:1.1rem;color:#888;margin-bottom:2rem}
+.badge{display:inline-block;background:#0d1a17;border:1px solid #1a3a2e;border-radius:4px;padding:.2rem .6rem;font-size:.8rem;color:#00c896;margin-right:.5rem;margin-bottom:.5rem}
+pre{background:#111;border:1px solid #222;border-radius:6px;padding:1rem;overflow-x:auto;margin:1rem 0;font-size:.9rem;color:#ccc}
+code{font-family:'SF Mono',Consolas,monospace}
+.features{list-style:none;margin:1.5rem 0}
+.features li{padding:.4rem 0;padding-left:1.5rem;position:relative}
+.features li::before{content:">";position:absolute;left:0;color:#00c896;font-weight:bold}
+.section{margin:2.5rem 0}
+.section h2{font-size:1.3rem;color:#fff;margin-bottom:1rem;border-bottom:1px solid #222;padding-bottom:.5rem}
+.trace-demo{background:#111;border:1px solid #222;border-radius:6px;padding:1.5rem;font-family:'SF Mono',Consolas,monospace;font-size:.85rem;line-height:1.8}
+.t-header{color:#fff;font-weight:bold}
+.t-meta{color:#666}
+.t-step{color:#5b9bd5}
+.t-decision{color:#c586c0}
+.t-error{color:#f44747}
+.t-dim{color:#555}
+.t-green{color:#00c896}
+.t-sep{color:#333}
+.footer{margin-top:3rem;padding-top:1rem;border-top:1px solid #222;color:#555;font-size:.8rem;text-align:center}
+a{color:#00c896;text-decoration:none}
+a:hover{text-decoration:underline}
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0}
+.tool-card{background:#111;border:1px solid #222;border-radius:6px;padding:.8rem}
+.tool-card h4{color:#00c896;font-size:.85rem;margin-bottom:.3rem;font-family:'SF Mono',Consolas,monospace}
+.tool-card p{color:#888;font-size:.8rem;line-height:1.4}
+@media(max-width:600px){.tools-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>agent<span>trace</span></h1>
+<p class="tagline">See what your AI agent does, why it decides, and where it fails.</p>
+
+<span class="badge">MCP server</span>
+<span class="badge">CLI viewer</span>
+<span class="badge">zero dependencies</span>
+<span class="badge">file-based</span>
+<span class="badge">MIT license</span>
+
+<div class="section">
+<h2>The problem</h2>
+<ul class="features">
+<li>AI agents work in a black box — you can't see what's happening until something breaks</li>
+<li>No standard way to log agent decisions, reasoning, or tool calls</li>
+<li>Post-mortem debugging without structured traces wastes hours</li>
+<li>Existing observability tools are built for microservices, not agents</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>The solution</h2>
+<ul class="features">
+<li>7 MCP tools that any AI agent can call to trace its own execution</li>
+<li>Structured events: steps, decisions (with reasoning), errors</li>
+<li>File-based JSON storage — human-readable, git-friendly, no database</li>
+<li>CLI viewer with color-coded output, real-time watch mode</li>
+<li>Works with Claude Code, Cursor, or any MCP client</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>Install</h2>
+<pre><code>npm install -g @ura-dev/agentrace</code></pre>
+
+<p style="color:#888;margin-top:.5rem">Add to your AI tool config:</p>
+<pre><code>{
+  "mcpServers": {
+    "agentrace": { "command": "agentrace-mcp" }
+  }
+}</code></pre>
+</div>
+
+<div class="section">
+<h2>MCP Tools</h2>
+<div class="tools-grid">
+<div class="tool-card"><h4>trace_start</h4><p>Start a new trace session for a task</p></div>
+<div class="tool-card"><h4>trace_step</h4><p>Log each action: tool call, file read, code change</p></div>
+<div class="tool-card"><h4>trace_decision</h4><p>Record decision points with options and reasoning</p></div>
+<div class="tool-card"><h4>trace_error</h4><p>Capture errors with context and recoverability</p></div>
+<div class="tool-card"><h4>trace_end</h4><p>End a trace with status and summary</p></div>
+<div class="tool-card"><h4>trace_list</h4><p>List recent traces across sessions</p></div>
+</div>
+</div>
+
+<div class="section">
+<h2>What the output looks like</h2>
+<div class="trace-demo">
+<span class="t-header">refactor auth module</span> <span class="t-dim">[b665af12f975]</span><br>
+<span class="t-meta">agent: claude-code | status: <span class="t-green">completed</span> | 2.3s | 5 events</span><br>
+<span class="t-sep">────────────────────────────────────────</span><br>
+<span class="t-dim">14:23:01</span> <span class="t-step">&gt;&gt;</span> <span class="t-dim">[Glob]</span> <strong>read codebase</strong><br>
+<span class="t-dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;src/auth/**/*.ts → 12 files</span><br>
+<span class="t-dim">14:23:01</span> <span class="t-step">&gt;&gt;</span> <span class="t-dim">[Read]</span> <strong>analyze auth middleware</strong> <span class="t-dim">(150ms)</span><br>
+<span class="t-dim">14:23:02</span> <span class="t-decision">??</span> <span class="t-decision">Session storage approach?</span><br>
+<span class="t-green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* JWT with httpOnly cookies</span><br>
+<span class="t-dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Server-side sessions</span><br>
+<span class="t-dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reason: Stateless, no DB dependency</span><br>
+<span class="t-dim">14:23:02</span> <span class="t-error">!!</span> <span class="t-error">Token validation fails on refresh [AUTH_003]</span><br>
+<span class="t-dim">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;context: existing refresh token logic</span><br>
+<span class="t-dim">14:23:03</span> <span class="t-step">&gt;&gt;</span> <span class="t-dim">[Edit]</span> <strong>fix token refresh flow</strong><br>
+<span class="t-sep">────────────────────────────────────────</span><br>
+<strong>Result:</strong> Auth module refactored, refresh flow fixed
+</div>
+</div>
+
+<div class="section">
+<h2>CLI</h2>
+<pre><code>agentrace list              # Recent traces
+agentrace view &lt;trace-id&gt;   # Full trace with all events
+agentrace watch &lt;trace-id&gt;  # Real-time tail of active trace
+agentrace stats             # Trace statistics</code></pre>
+</div>
+
+<div class="section">
+<h2>As a library</h2>
+<pre><code>const { createTrace, addStep, addDecision, endTrace } = require('@ura-dev/agentrace');
+
+const { id } = createTrace({ name: 'deploy', agent: 'my-agent' });
+addStep(id, { action: 'build', tool: 'npm', output: 'ok' });
+addDecision(id, {
+  question: 'Deploy target?',
+  chosen: 'staging',
+  reasoning: 'Friday — no prod deploys'
+});
+endTrace(id, { status: 'completed' });</code></pre>
+</div>
+
+<div class="footer">
+<p>Built by <strong>ura</strong> — developer tools that go deeper</p>
+<p style="margin-top:.3rem"><a href="https://github.com/ura-tools/agentrace">GitHub</a> &middot; <a href="https://www.npmjs.com/package/@ura-dev/agentrace">npm</a> &middot; MIT License &middot; v1.0.0</p>
+</div>
+
+</div>
+</body>
+</html>

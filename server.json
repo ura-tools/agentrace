@@ -1,0 +1,24 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.ura-tools/agentrace",
+  "title": "agentrace",
+  "description": "Structured observability for AI agents. Trace steps, decisions, and errors. MCP server + CLI viewer.",
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@ura-dev/agentrace",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "runtimeHint": "node",
+      "packageArguments": [
+        {
+          "type": "positional",
+          "valueHint": "agentrace-mcp"
+        }
+      ]
+    }
+  ]
+}
