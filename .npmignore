@@ -1,0 +1,7 @@
+.test-traces/
+.agentrace/
+.git/
+.gitignore
+.github-auth.json
+.npmrc
+scripts/

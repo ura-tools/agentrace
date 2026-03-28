@@ -1,0 +1,6 @@
+node_modules/
+.test-traces/
+.npmrc
+.github-auth.json
+scripts/
+*.tgz

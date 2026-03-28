@@ -1,0 +1,35 @@
+{
+  "name": "@ura-dev/agentrace",
+  "version": "1.0.0",
+  "description": "Structured observability for AI agents — MCP server + CLI viewer",
+  "main": "lib/index.js",
+  "bin": {
+    "agentrace": "bin/cli.js",
+    "agentrace-mcp": "bin/mcp-server.js"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "agent",
+    "observability",
+    "tracing",
+    "mcp",
+    "mcp-server",
+    "ai-agent",
+    "debugging",
+    "claude",
+    "cursor",
+    "devtools"
+  ],
+  "author": "ura",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "mcpName": "io.github.ura-tools/agentrace",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ura-tools/agentrace"
+  }
+}
